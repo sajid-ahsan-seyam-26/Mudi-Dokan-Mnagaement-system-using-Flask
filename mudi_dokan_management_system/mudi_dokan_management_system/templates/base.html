@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mudi Dokan Management</title>
+
+    <!-- CSS file link -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <!-- Navbar Start -->
+    <nav class="navbar">
+      <div class="logo">Mudi <span>Dokan</span></div>
+
+      <div class="nav-links">
+        <a href="{{ url_for('home') }}">Dashboard</a>
+        <a href="{{ url_for('add_product') }}">Add Product</a>
+        <a href="{{ url_for('sales') }}">Sales</a>
+        <a href="{{ url_for('about') }}">About</a>
+      </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Flash message Start -->
+    <div class="message-box">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+    <!-- Flash message End -->
+
+    <!-- Main content will come here -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer Start -->
+    <footer>
+      <p>
+        &copy; <span id="year"></span> Mudi Dokan Management System. Beginner Flask Project.
+      </p>
+    </footer>
+    <!-- Footer End -->
+
+    <!-- JavaScript file link -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

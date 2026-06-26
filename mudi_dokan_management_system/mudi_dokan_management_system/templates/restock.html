@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="form-page">
+    <div class="form-box">
+        <h2>Restock {{ product.name }}</h2>
+        <p class="form-subtitle">Current stock: {{ product.stock }} {{ product.unit }}</p>
+
+        <form method="POST" class="main-form" onsubmit="return validateRestockForm();">
+            <label>Add Stock Quantity</label>
+            <input type="number" name="add_stock" id="add_stock" placeholder="Example: 20">
+
+            <label>Updated Buy Price</label>
+            <input type="number" step="0.01" name="buy_price" id="buy_price" value="{{ product.buy_price }}">
+
+            <label>Updated Sell Price</label>
+            <input type="number" step="0.01" name="sell_price" id="sell_price" value="{{ product.sell_price }}">
+
+            <button type="submit">Update Stock</button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

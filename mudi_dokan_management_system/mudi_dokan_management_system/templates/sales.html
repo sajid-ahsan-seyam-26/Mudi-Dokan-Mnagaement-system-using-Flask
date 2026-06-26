@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="stats-section small-gap">
+    <div class="stats-card">
+        <h3>৳{{ "%.2f"|format(stats.total_sales_amount) }}</h3>
+        <p>Total Sales</p>
+    </div>
+
+    <div class="stats-card">
+        <h3>৳{{ "%.2f"|format(stats.total_profit) }}</h3>
+        <p>Total Profit</p>
+    </div>
+</section>
+
+<section class="table-page">
+    <h2>All Sales Records</h2>
+
+    {% if sales %}
+        <div class="table-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Phone</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Profit</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for sale in sales %}
+                        <tr>
+                            <td>{{ sale.id }}</td>
+                            <td>{{ sale.sale_date }}</td>
+                            <td>{{ sale.customer_name }}</td>
+                            <td>{{ sale.customer_phone or "-" }}</td>
+                            <td>{{ sale.product.name }}</td>
+                            <td>{{ sale.quantity }}</td>
+                            <td>৳{{ "%.2f"|format(sale.total_amount) }}</td>
+                            <td>৳{{ "%.2f"|format(sale.profit) }}</td>
+                            <td>
+                                <form action="{{ url_for('delete_sale', sale_id=sale.id) }}" method="POST" onsubmit="return confirmDelete();">
+                                    <button class="delete-btn" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-text">No sale found yet.</p>
+    {% endif %}
+</section>
+
+{% endblock %}

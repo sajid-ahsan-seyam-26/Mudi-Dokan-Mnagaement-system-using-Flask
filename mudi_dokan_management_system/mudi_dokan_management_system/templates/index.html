@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-text">
+        <h1>Mudi Dokan Management System</h1>
+        <p>Manage grocery products, stock, sales, profit and low-stock items from one simple dashboard.</p>
+        <a class="hero-btn" href="{{ url_for('add_product') }}">Add New Product</a>
+    </div>
+</section>
+
+<!-- Dashboard Cards -->
+<section class="stats-section">
+    <div class="stats-card">
+        <h3>{{ stats.total_products }}</h3>
+        <p>Total Products</p>
+    </div>
+
+    <div class="stats-card">
+        <h3>৳{{ "%.2f"|format(stats.total_stock_value) }}</h3>
+        <p>Stock Value</p>
+    </div>
+
+    <div class="stats-card warning-card">
+        <h3>{{ stats.low_stock_count }}</h3>
+        <p>Low Stock Items</p>
+    </div>
+
+    <div class="stats-card">
+        <h3>৳{{ "%.2f"|format(stats.total_profit) }}</h3>
+        <p>Total Profit</p>
+    </div>
+</section>
+
+<!-- Search Section -->
+<section class="search-section">
+    <h2>Search Products</h2>
+
+    <form action="{{ url_for('home') }}" method="GET" class="search-form">
+        <input type="text" name="name" placeholder="Search by product name" value="{{ search_name }}">
+        <input type="text" name="category" placeholder="Search by category e.g. Oil" value="{{ search_category }}">
+
+        <select name="stock">
+            <option value="" {% if stock_filter == "" %}selected{% endif %}>All Stock</option>
+            <option value="low" {% if stock_filter == "low" %}selected{% endif %}>Low Stock Only</option>
+        </select>
+
+        <button type="submit">Search</button>
+        <a class="reset-btn" href="{{ url_for('home') }}">Reset</a>
+    </form>
+</section>
+
+<!-- Product List Section -->
+<section class="card-section">
+    <h2>Available Products</h2>
+
+    <div class="cards">
+        {% if products %}
+            {% for product in products %}
+                <div class="card {% if product.is_low_stock() %}low-stock{% endif %}">
+                    <div class="card-top">
+                        <div class="avatar">{{ product.name[0] }}</div>
+                        <div>
+                            <h3>{{ product.name }}</h3>
+                            <p class="city">{{ product.category }}</p>
+                        </div>
+                    </div>
+
+                    {% if product.is_low_stock() %}
+                        <p class="stock-alert">Low Stock Alert</p>
+                    {% endif %}
+
+                    <p><strong>Supplier:</strong> {{ product.supplier }}</p>
+                    <p><strong>Unit:</strong> {{ product.unit }}</p>
+                    <p><strong>Buy Price:</strong> ৳{{ "%.2f"|format(product.buy_price) }}</p>
+                    <p><strong>Sell Price:</strong> ৳{{ "%.2f"|format(product.sell_price) }}</p>
+                    <p><strong>Stock:</strong> {{ product.stock }} {{ product.unit }}</p>
+                    <p><strong>Profit/Unit:</strong> ৳{{ "%.2f"|format(product.profit_per_unit()) }}</p>
+
+                    <div class="card-buttons">
+                        <a class="sell-btn" href="{{ url_for('sell_product', product_id=product.id) }}">Sell</a>
+                        <a class="restock-btn" href="{{ url_for('restock_product', product_id=product.id) }}">Restock</a>
+
+                        <form action="{{ url_for('delete_product', product_id=product.id) }}" method="POST" onsubmit="return confirmDelete();">
+                            <button class="delete-btn" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-text">No product found. Try another name or category.</p>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
